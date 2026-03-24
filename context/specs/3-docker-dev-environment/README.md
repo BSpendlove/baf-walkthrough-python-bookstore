@@ -11,7 +11,7 @@ Docker container and docker-compose setup with Caddy reverse proxy (internal TLS
 | Phase | Status | Agent |
 |-------|--------|-------|
 | spec-create | Complete | Claude |
-| spec-review | Not Started | — |
+| spec-review | Complete | Gemini |
 | spec-critique | Not Started | — |
 | spec-finalize | Not Started | — |
 | spec-implement | Not Started | — |
