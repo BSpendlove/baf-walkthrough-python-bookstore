@@ -6,23 +6,13 @@ This file tracks project state. Every agent session should read this before star
 
 ## Current State
 
-This is a template repository for the BYOA (Bring Your Own Agent) workflow framework. It provides Claude Code skills, workflow documentation, and GitHub issue templates that any project can adopt for LLM-driven development.
+Bookstore API — no work completed yet. File an issue to get started.
 
 ## Completed Specs
 
 | Spec | Issue | Status | Summary |
 |------|-------|--------|---------|
 | *(none yet)* | | | |
-
-## Spec Dependencies
-
-```mermaid
-graph TD
-    BOOTSTRAP[0-bootstrap<br/>Workflow skills + docs + templates]
-    style BOOTSTRAP fill:#2da44e,color:#fff
-```
-
-Legend: green = complete, blue = in progress, grey = planned
 
 ## Key Decisions
 
