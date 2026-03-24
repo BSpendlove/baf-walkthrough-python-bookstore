@@ -1,0 +1,4 @@
+bookstore.localhost {
+	reverse_proxy app:8000
+	tls internal
+}
