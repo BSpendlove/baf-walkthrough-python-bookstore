@@ -14,7 +14,7 @@ Docker container and docker-compose setup with Caddy reverse proxy (internal TLS
 | spec-review | Complete | Gemini |
 | spec-critique | Complete | Codex |
 | spec-finalize | Complete | Claude |
-| spec-implement | Not Started | — |
+| spec-implement | Complete | Claude |
 | spec-final-review | Not Started | — |
 
 ## Key Files
