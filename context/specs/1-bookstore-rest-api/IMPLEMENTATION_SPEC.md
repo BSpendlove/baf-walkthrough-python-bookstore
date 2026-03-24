@@ -46,18 +46,18 @@ FastAPI application (single module)
 | published_year | INTEGER | nullable |
 | description | TEXT | nullable |
 | created_at | DATETIME | NOT NULL, default=now |
-| updated_at | DATETIME | NOT NULL, default=now, onupdate=now |
+| updated_at | DATETIME | NOT NULL, default=now (explicitly set in application code on update, since SQLite does not support `onupdate` triggers natively via SQLAlchemy) |
 
 ### API Endpoints
 
-| Method | Path | Description | Status Codes |
-|--------|------|-------------|--------------|
-| POST | `/books` | Create a book | 201, 422 |
-| GET | `/books` | List books (paginated) | 200 |
-| GET | `/books/{id}` | Get a single book | 200, 404 |
-| PUT | `/books/{id}` | Update a book | 200, 404, 422 |
-| DELETE | `/books/{id}` | Delete a book | 204, 404 |
-| GET | `/books/search?q=` | Search by title/author | 200 |
+| Method | Path | Parameters | Description | Status Codes |
+|--------|------|------------|-------------|--------------|
+| POST | `/books` | — | Create a book | 201, 422 |
+| GET | `/books` | `skip` (default 0), `limit` (default 20, max 100) | List books (paginated) | 200 |
+| GET | `/books/{id}` | — | Get a single book | 200, 404 |
+| PUT | `/books/{id}` | — | Update a book | 200, 404, 422 |
+| DELETE | `/books/{id}` | — | Delete a book | 204, 404 |
+| GET | `/books/search?q=` | `q` (required), `skip` (default 0), `limit` (default 20, max 100) | Search by title/author | 200 |
 
 ### Pagination
 
@@ -69,12 +69,15 @@ ISBN-13 is validated on `POST /books` and `PUT /books/{id}`:
 
 1. Strip hyphens and spaces
 2. Must be exactly 13 digits
-3. Check digit must be valid per ISBN-13 algorithm (alternating weights of 1 and 3, mod 10)
-4. Invalid ISBN returns 422 with a descriptive error message
+3. Check digit must be valid per ISBN-13 algorithm: weights (1, 3, 1, 3, ...) are applied to the first 12 digits, summed, and the check digit (13th) must satisfy `(10 - (sum % 10)) % 10`
+4. The **normalized** ISBN (hyphens/spaces stripped) is the version stored in the database, ensuring the UNIQUE constraint works correctly regardless of input formatting
+5. Invalid ISBN returns 422 with a descriptive error message
 
 ### Search
 
-`GET /books/search?q=<query>` performs case-insensitive `LIKE` search across `title` and `author` columns. Returns paginated results using the same `skip`/`limit` parameters.
+`GET /books/search?q=<query>` performs case-insensitive search across `title` and `author` columns using SQLAlchemy's `.ilike()` for correct case-insensitive matching. Returns paginated results using the same `skip`/`limit` parameters.
+
+**Note:** The `LIKE`/`ilike` approach is sufficient for the current scope. If the dataset grows significantly, this should be replaced with SQLite Full Text Search (FTS5) for better performance, as `%query%` patterns cannot use standard indexes.
 
 ### Error Handling
 
@@ -94,7 +97,7 @@ No environment variables needed. SQLite database file defaults to `bookstore.db`
 | `app/__init__.py` | Create | Package init |
 | `app/database.py` | Create | SQLAlchemy engine, `SessionLocal`, `Base`, `get_db` dependency |
 | `app/models.py` | Create | `Book` SQLAlchemy model |
-| `app/schemas.py` | Create | `BookCreate`, `BookUpdate`, `BookResponse` Pydantic schemas |
+| `app/schemas.py` | Create | `BookCreate`, `BookUpdate`, `BookResponse` Pydantic schemas with `Field` constraints (`price=Field(gt=0)`, `published_year=Field(ge=1000, le=2100)`) |
 | `app/isbn.py` | Create | `validate_isbn13(isbn: str) -> str` — returns normalized ISBN or raises `ValueError` |
 | `app/routes/__init__.py` | Create | Package init |
 | `app/routes/books.py` | Create | All book endpoints (CRUD + search) |

@@ -9,9 +9,9 @@ REST API for managing a bookstore catalog with CRUD operations, search, and ISBN
 | Phase | Status | Agent |
 |-------|--------|-------|
 | spec-create | Complete | Claude |
-| spec-review | Not Started | — |
-| spec-critique | Not Started | — |
-| spec-finalize | Not Started | — |
+| spec-review | Complete | Gemini |
+| spec-critique | Skipped | — |
+| spec-finalize | Complete | Claude |
 | spec-implement | Not Started | — |
 | spec-final-review | Not Started | — |
 
