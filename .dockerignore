@@ -6,7 +6,6 @@ __pycache__/
 *.db
 context/
 docs/
-tests/
 *.egg-info/
 dist/
 build/

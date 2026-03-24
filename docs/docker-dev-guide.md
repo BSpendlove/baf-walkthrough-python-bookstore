@@ -44,7 +44,7 @@ Tests run inside the container with all dev dependencies available:
 docker compose exec app pytest
 ```
 
-Tests use an in-memory SQLite database and do not affect the development database.
+Tests use an in-memory SQLite database for request handling. Note that the FastAPI lifespan may still initialize the persistent database schema on startup, but test data is fully isolated.
 
 ## Stopping the Environment
 
